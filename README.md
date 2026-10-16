@@ -92,13 +92,3 @@ Google also redirects to Recall's `/api/v1/calendar/google_oauth_callback/` duri
 **Playback:** The backend selects the first available `recordings[].media_shortcuts.video_mixed.data.download_url` from Retrieve Bot. The event panel uses a video frame as a thumbnail, and Play opens the URL in a new window. See [How to get Mixed Video + Audio MP4](https://docs.recall.ai/docs/how-to-get-mixed-video-mp4). Signed playback URLs expire; Refresh fetches fresh ones while the media remains available. See [Storage and Data Retention](https://docs.recall.ai/docs/storage-and-playback).
 
 **History:** Meeting requests set `start_time_after` to one year before the request. This only filters the history Recall still retains; it does not recover expired events or create recordings of earlier meetings. Calendar history and recording-media retention are separate.
-
-## Use this example in your own app
-
-Start with `app/_lib/oauth.ts` for the connection flow and `app/api/calendar/` for meeting, preference, and recording requests. Keep the server-side Recall calls and replace the example screens with your own product experience.
-
-The key change for multiple users is identity: **this demo uses one `RECALL_USER_ID` for everyone**. In your app, supply the signed-in user's stable ID when generating their calendar token, and use that same ID for their later requests. The Google connection button here connects a calendar; it does not implement application accounts or sessions. Reusing one ID for different people can replace the calendar associated with that user. See the [Calendar V1 FAQ](https://docs.recall.ai/v1.10/docs/calendar-v1-faq).
-
-Adapt the presets in `client/src/preferences.ts` to the recording choices your product offers. Recall stores the connection and preferences, so this example has no database. The API key stays in the backend, and this app never receives Google's access or refresh token directly.
-
-If you want your application to decide which individual events get bots and control deduplication, use the [Calendar V2 integration guide](https://docs.recall.ai/docs/calendar-v2-integration-guide) as the next step. This example specifically demonstrates Recall-managed scheduling through Calendar V1.
