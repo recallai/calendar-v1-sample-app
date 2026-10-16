@@ -1,0 +1,26 @@
+# Credentials and local environment
+.env
+.env.*
+!.env.sample
+*.local
+
+# Dependencies and package caches
+node_modules/
+.pnpm-store/
+# This workspace uses the root lockfile.
+/client/pnpm-lock.yaml
+
+# Generated output
+.next/
+dist/
+dist-ssr/
+*.tsbuildinfo
+next-env.d.ts
+
+# Local logs, notes, and editor files
+*.log
+logs/
+Notes.md
+.DS_Store
+.idea/
+.vscode/
