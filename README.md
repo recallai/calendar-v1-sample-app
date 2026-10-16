@@ -7,12 +7,10 @@ This app shows how to connect a Google Calendar to Recall.ai, let Recall schedul
 
 - Connect a Google account through Google's consent screen.
 - Browse synced meetings and see whether Recall plans to record them.
-- Set recording preferences using individual switches or presets: all meetings, internal only, external only, meetings you host, or accepted invitations only.
+- Set recording preferences using individual switches or presets: all meetings
 - Change the bot's display name.
 - Inspect a meeting's complete Recall metadata.
 - Preview available past recordings and open playback in a separate window.
-
-The calendar displays Recall's meeting data; it does not call Google Calendar directly or implement calendar editing.
 
 ## Run the example
 
