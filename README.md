@@ -2,7 +2,6 @@
 
 This app shows how to connect a Google Calendar to Recall.ai, let Recall schedule meeting bots, and view the resulting recordings. It uses **Calendar V1**, where Recall manages calendar synchronization and bot scheduling according to each user's recording preferences.
 
-Use it to try the complete connection-to-playback flow, inspect the data Recall returns, or build calendar recording into your own app. The example favors readable code: a Next.js backend calls Recall with `fetch`, and a small React client provides the calendar and settings pages.
 
 ## What you can do
 
