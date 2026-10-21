@@ -1,4 +1,4 @@
-# Google and Microsoft Calendar recording example
+# Calendar V1 Integration Sample App
 
 This app shows how to connect a Google or Microsoft Outlook calendar to Recall.ai, let Recall schedule meeting bots, and view the resulting recordings. It uses **Calendar V1**, where Recall manages calendar synchronization and bot scheduling according to each user's recording preferences.
 
