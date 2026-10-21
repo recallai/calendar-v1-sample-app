@@ -69,11 +69,10 @@ Fill in `.env`:
 | `RECALL_API_KEY` | API key for your Recall workspace in `RECALL_REGION`. See [API authentication](https://docs.recall.ai/v1.11/reference/authentication). | Yes | None |
 | `RECALL_REGION` | Recall region used for API requests, such as `us-east-1` or `us-west-2`. | No | `us-east-1` |
 | `RECALL_USER_ID` | Your app's stable user identifier, sent to Recall as `user_id` when requesting a calendar auth token. | No | `local-demo-user` |
-| `CLIENT_ORIGIN` | Browser-facing app origin used to build the success (`/calendar`) and error (`/?connection=error`) return URLs. This does not change the server's listening port. | No | `http://localhost:5173` |
 
 The callback overrides in `.env.sample` are blank so both URLs default to your `RECALL_REGION`. If you override either callback, it must exactly match the URI registered with that provider.
 
-`CLIENT_ORIGIN` defaults to `http://localhost:5173`; change it if the browser-facing app origin differs. Google and Microsoft client secrets or certificate credentials belong in Recall's dashboard, not this app's environment. Configure at least one provider client ID to start the app; configure both to support both sign-in options.
+Google and Microsoft client secrets or certificate credentials belong in Recall's dashboard, not this app's environment. Configure at least one provider client ID to start the app; configure both to support both sign-in options.
 
 ### 3. Start both servers
 
