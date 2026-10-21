@@ -24,3 +24,7 @@ Notes.md
 .DS_Store
 .idea/
 .vscode/
+
+# Local Microsoft OAuth certificate files
+/private.key
+/certificate.crt

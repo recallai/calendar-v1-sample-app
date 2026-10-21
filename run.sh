@@ -29,10 +29,9 @@ import { existsSync } from 'node:fs'
 if (existsSync('.env')) process.loadEnvFile('.env')
 else console.log('No .env file found. Copy .env.sample to .env, or export the variables in your shell.')
 
-const googleDocs = 'https://docs.recall.ai/docs/calendar-v1-google-calendar'
+const googleDocs = 'https://docs.recall.ai/v1.11/docs/calendar-v1-google-calendar'
 const required = [
-  ['RECALL_API_KEY', 'Create an API key in your Recall region.', 'https://docs.recall.ai/reference/authentication'],
-  ['GOOGLE_OAUTH_CLIENT_ID', 'Create a Google OAuth client and save its credentials in Recall.', googleDocs],
+  ['RECALL_API_KEY', 'Create an API key in your Recall region.', 'https://docs.recall.ai/v1.11/reference/authentication'],
 ]
 let missing = false
 for (const [name, description, docs] of required) {
@@ -43,10 +42,25 @@ for (const [name, description, docs] of required) {
   }
 }
 
+const microsoftDocs = 'https://docs.recall.ai/v1.11/docs/calendar-v1-microsoft-outlook'
+const providers = [
+  ['GOOGLE_OAUTH_CLIENT_ID', googleDocs],
+  ['MICROSOFT_OAUTH_CLIENT_ID', microsoftDocs],
+]
+const hasClientId = name => !!process.env[name]?.trim() && process.env[name].trim() !== name
+for (const [name, docs] of providers) {
+  if (!hasClientId(name)) console.log(`Notice: ${name} is unset; this sign-in option is unavailable.\n  ${docs}`)
+}
+if (!providers.some(([name]) => hasClientId(name))) {
+  console.error('Set GOOGLE_OAUTH_CLIENT_ID or MICROSOFT_OAUTH_CLIENT_ID to enable calendar sign-in.')
+  missing = true
+}
+
 const region = process.env.RECALL_REGION || 'us-east-1'
 const defaults = [
-  ['RECALL_REGION', 'us-east-1', 'https://docs.recall.ai/docs/regions'],
-  ['RECALL_USER_ID', 'local-demo-user', 'https://docs.recall.ai/docs/calendar-v1-integration-guide'],
+  ['RECALL_REGION', 'us-east-1', 'https://docs.recall.ai/v1.11/docs/regions'],
+  ['RECALL_USER_ID', 'local-demo-user', 'https://docs.recall.ai/v1.11/docs/calendar-v1-integration-guide'],
+  ['MICROSOFT_OAUTH_REDIRECT_URI', `https://${region}.recall.ai/api/v1/calendar/ms_oauth_callback/`, microsoftDocs],
   ['GOOGLE_OAUTH_REDIRECT_URI', `https://${region}.recall.ai/api/v1/calendar/google_oauth_callback/`, googleDocs],
   ['CLIENT_ORIGIN', 'http://localhost:5173', googleDocs],
 ]

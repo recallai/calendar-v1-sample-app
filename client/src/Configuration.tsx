@@ -6,8 +6,10 @@ const endpoint = '/api/calendar/recording_preference'
 
 export default function Configuration() {
   const [preferences, setPreferences] = useState<Preferences | null>(null)
-  const [connected, setConnected] = useState(false)
+  const [connectedPlatforms, setConnectedPlatforms] = useState<('google' | 'microsoft')[]>([])
+  const connected = connectedPlatforms.length > 0
   const [saving, setSaving] = useState(false)
+  const [disconnecting, setDisconnecting] = useState<'google' | 'microsoft' | null>(null)
   const [message, setMessage] = useState('Loading…')
 
   useEffect(() => {
@@ -18,7 +20,7 @@ export default function Configuration() {
         if (!response.ok) throw new Error(data.error)
         const { id: _id, ...preferences } = data.preferences
         setPreferences(preferences)
-        setConnected(data.connected)
+        setConnectedPlatforms(data.connectedPlatforms)
         setMessage('')
       } catch {
         setMessage('Could not load settings. Please try again.')
@@ -45,14 +47,41 @@ export default function Configuration() {
     setSaving(false)
   }
 
+  async function disconnect(platform: 'google' | 'microsoft') {
+    setDisconnecting(platform)
+    setMessage('')
+    try {
+      const response = await fetch('/api/calendar/disconnect', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ platform }),
+      })
+      if (!response.ok) throw new Error('Disconnect failed')
+      const remainingPlatforms = connectedPlatforms.filter(connected => connected !== platform)
+      if (remainingPlatforms.length === 0) {
+        window.location.assign('/')
+        return
+      }
+      setConnectedPlatforms(remainingPlatforms)
+      setMessage(`${platform === 'google' ? 'Google' : 'Microsoft'} calendar disconnected.`)
+      setDisconnecting(null)
+    } catch {
+      setMessage('Could not disconnect calendar. Please try again.')
+      setDisconnecting(null)
+    }
+  }
+
   const activePreset = preferences ? selectedPreset(preferences) : undefined
 
   return <main>
     <div className="page-nav"><h1>Configuration</h1><a href="/calendar">Calendar</a></div>
     {!preferences && <button type="button" onClick={() => window.location.reload()}>Reload settings</button>}
-    {preferences && !connected && <SignInButton />}
+    {preferences && <div className="sign-in-options">
+      {!connectedPlatforms.includes('google') && <SignInButton platform="google" />}
+      {!connectedPlatforms.includes('microsoft') && <SignInButton platform="microsoft" />}
+    </div>}
     {preferences && <form onSubmit={save}>
-      <fieldset className="settings-layout" disabled={saving || !connected}>
+      <fieldset className="settings-layout" disabled={saving || !!disconnecting || !connected}>
         <div className="settings-toolbar">
           <label className="field bot-name">
             Bot name
@@ -98,6 +127,11 @@ export default function Configuration() {
         </section>
       </fieldset>
     </form>}
+    <div className="disconnect-calendar sign-in-options">
+      {connectedPlatforms.map(platform => <button key={platform} type="button" disabled={saving || !!disconnecting} onClick={() => disconnect(platform)}>
+        {disconnecting === platform ? 'Disconnecting…' : `Disconnect ${platform === 'google' ? 'Google' : 'Microsoft'} calendar`}
+      </button>)}
+    </div>
     <p className="status" role="status">{message}</p>
   </main>
 }

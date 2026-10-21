@@ -27,10 +27,11 @@ export async function GET() {
     })
     if (!response.ok) throw new Error('Could not load recording preferences.')
     const user = await response.json()
-    const connected = user.connections.some(
-      (connection: { platform: string; connected: boolean }) => connection.platform === 'google' && connection.connected,
-    )
-    return Response.json({ preferences: user.preferences, connected })
+    const connectedPlatforms = user.connections
+      .filter((connection: { platform: string; connected: boolean }) =>
+        connection.connected && ['google', 'microsoft'].includes(connection.platform))
+      .map((connection: { platform: string }) => connection.platform)
+    return Response.json({ preferences: user.preferences, connected: connectedPlatforms.length > 0, connectedPlatforms })
   } catch {
     return Response.json({ error: 'Could not load recording preferences.' }, { status: 500 })
   }
